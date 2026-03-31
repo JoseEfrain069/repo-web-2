@@ -1,0 +1,75 @@
+<%- include('../components/header', { titulo: 'Horarios' }) %>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Horarios</h2>
+        <a href="/admin/horarios/nuevo" class="btn btn-primary">Agregar horario</a>
+    </div>
+
+    <form class="card card-body mb-3" method="GET" action="/admin/horarios">
+        <div class="row g-2">
+            <div class="col-md-5">
+                <select class="form-select" name="cancha_id">
+                    <option value="">Todas las canchas</option>
+                    <% canchas.forEach((c)=> { %>
+                        <option value="<%= c.id %>" <%=filtros.cancha_id==c.id ? 'selected' : '' %>><%= c.nombre %>
+                        </option>
+                        <% }) %>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <input type="date" name="fecha" class="form-control" value="<%= filtros.fecha || '' %>">
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-outline-primary w-100">Filtrar</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="card">
+        <div class="card-body p-0">
+            <table class="table table-striped m-0">
+                <thead>
+                    <tr>
+                        <th>Cancha</th>
+                        <th>Fecha</th>
+                        <th>Inicio</th>
+                        <th>Fin</th>
+                        <th>Disponible</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (!horarios.length) { %>
+                        <tr>
+                            <td colspan="6" class="text-center">Sin horarios.</td>
+                        </tr>
+                        <% } %>
+                            <% horarios.forEach((h)=> { %>
+                                <tr>
+                                    <td>
+                                        <%= h.cancha ? h.cancha.nombre : '-' %>
+                                    </td>
+                                    <td>
+                                        <%= h.fecha %>
+                                    </td>
+                                    <td>
+                                        <%= h.hora_inicio %>
+                                    </td>
+                                    <td>
+                                        <%= h.hora_fin %>
+                                    </td>
+                                    <td><span class="badge <%= h.disponible ? 'bg-success' : 'bg-secondary' %>">
+                                            <%= h.disponible ? 'si' : 'no' %>
+                                        </span></td>
+                                    <td>
+                                        <form method="POST" action="/admin/horarios/<%= h.id %>/eliminar"
+                                            class="d-inline">
+                                            <button class="btn btn-sm btn-outline-danger">Eliminar</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <%- include('../components/footer') %>

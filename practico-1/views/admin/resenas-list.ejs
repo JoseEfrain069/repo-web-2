@@ -1,0 +1,57 @@
+<%- include('../components/header', { titulo: 'Reseñas' }) %>
+    <h2 class="mb-3">Reseñas de Canchas</h2>
+    <form class="card card-body mb-3" method="GET" action="/admin/resenas">
+        <div class="row g-2">
+            <div class="col-md-9">
+                <select name="cancha_id" class="form-select">
+                    <option value="">Todas las canchas</option>
+                    <% canchas.forEach((c)=> { %>
+                        <option value="<%= c.id %>" <%=cancha_id==c.id ? 'selected' : '' %>><%= c.nombre %>
+                        </option>
+                        <% }) %>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-outline-primary w-100">Filtrar</button>
+            </div>
+        </div>
+    </form>
+    <div class="card">
+        <div class="card-body p-0">
+            <table class="table table-striped m-0">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Cancha</th>
+                        <th>Puntaje</th>
+                        <th>Comentario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (!resenas.length) { %>
+                        <tr>
+                            <td colspan="4" class="text-center">Sin reseñas.</td>
+                        </tr>
+                        <% } %>
+                            <% resenas.forEach((r)=> { %>
+                                <tr>
+                                    <td>
+                                        <%= r.usuario ? r.usuario.nombre : '-' %> (<%= r.usuario ? r.usuario.email : '-'
+                                                %>)
+                                    </td>
+                                    <td>
+                                        <%= r.cancha ? r.cancha.nombre : '-' %>
+                                    </td>
+                                    <td>
+                                        <%= r.calificacion %>/5
+                                    </td>
+                                    <td>
+                                        <%= r.comentario %>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <%- include('../components/footer') %>

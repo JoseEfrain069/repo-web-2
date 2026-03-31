@@ -1,0 +1,52 @@
+<%- include('../components/header', { titulo: 'Canchas' }) %>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Canchas</h2>
+        <a href="/admin/canchas/nuevo" class="btn btn-primary">Nueva cancha</a>
+    </div>
+    <div class="card">
+        <div class="card-body p-0">
+            <table class="table table-striped m-0">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Precio</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (!canchas.length) { %>
+                        <tr>
+                            <td colspan="5" class="text-center">Sin registros</td>
+                        </tr>
+                        <% } %>
+                            <% canchas.forEach((cancha)=> { %>
+                                <tr>
+                                    <td>
+                                        <%= cancha.nombre %>
+                                    </td>
+                                    <td>
+                                        <%= cancha.tipo ? cancha.tipo.nombre : '-' %>
+                                    </td>
+                                    <td>$<%= cancha.precio_por_hora %>
+                                    </td>
+                                    <td><span
+                                            class="badge <%= cancha.estado === 'activa' ? 'bg-success' : 'bg-secondary' %>">
+                                            <%= cancha.estado %>
+                                        </span></td>
+                                    <td>
+                                        <a href="/admin/canchas/<%= cancha.id %>/editar"
+                                            class="btn btn-sm btn-outline-secondary">Editar</a>
+                                        <form action="/admin/canchas/<%= cancha.id %>/eliminar" method="POST"
+                                            class="d-inline">
+                                            <button class="btn btn-sm btn-outline-danger">Eliminar</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <%- include('../components/footer') %>
