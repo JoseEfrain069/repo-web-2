@@ -1,0 +1,87 @@
+<%- include('../components/header', { titulo: cancha.nombre }) %>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2 class="mb-0">
+                <%= cancha.nombre %>
+            </h2>
+            <small class="text-muted">
+                <%= cancha.tipo ? cancha.tipo.nombre : 'Sin tipo' %> | $<%= cancha.precio_por_hora %> por hora
+            </small>
+        </div>
+        <a href="/canchas" class="btn btn-outline-secondary">Volver</a>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form class="row g-2" method="GET" action="/canchas/<%= cancha.id %>">
+                <div class="col-md-4">
+                    <label class="form-label">Fecha</label>
+                    <input type="date" name="fecha" class="form-control" value="<%= fechaSeleccionada %>" required>
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <button class="btn btn-primary w-100">Filtrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">Horarios disponibles</div>
+        <div class="card-body p-0">
+            <table class="table table-striped m-0">
+                <thead>
+                    <tr>
+                        <th>Inicio</th>
+                        <th>Fin</th>
+                        <th>Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (!horarios.length) { %>
+                        <tr>
+                            <td colspan="3" class="text-center">No hay horarios disponibles.</td>
+                        </tr>
+                        <% } %>
+                            <% horarios.forEach((h)=> { %>
+                                <tr>
+                                    <td>
+                                        <%= h.hora_inicio %>
+                                    </td>
+                                    <td>
+                                        <%= h.hora_fin %>
+                                    </td>
+                                    <td>
+                                        <form action="/reservas" method="POST" class="m-0">
+                                            <input type="hidden" name="horario_id" value="<%= h.id %>">
+                                            <button class="btn btn-sm btn-success">Reservar</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">Reseñas</div>
+        <div class="card-body">
+            <% if (!resenas.length) { %>
+                <p class="text-muted mb-0">Todavia no hay reseñas.</p>
+                <% } %>
+                    <% resenas.forEach((r)=> { %>
+                        <div class="border-bottom mb-3 pb-2">
+                            <strong>
+                                <%= r.usuario ? r.usuario.nombre : 'Usuario' %>
+                            </strong>
+                            <span class="badge bg-warning text-dark">
+                                <%= r.calificacion %>/5
+                            </span>
+                            <p class="mb-0">
+                                <%= r.comentario %>
+                            </p>
+                        </div>
+                        <% }) %>
+        </div>
+    </div>
+    <%- include('../components/footer') %>

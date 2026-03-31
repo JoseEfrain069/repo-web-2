@@ -1,0 +1,91 @@
+<%- include('../components/header', { titulo: 'Mis Reservas' }) %>
+    <h2 class="mb-4">Mis Reservas</h2>
+    <div class="card">
+        <div class="card-body p-0">
+            <table class="table table-striped m-0">
+                <thead>
+                    <tr>
+                        <th>Cancha</th>
+                        <th>Fecha</th>
+                        <th>Horario</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (!reservas.length) { %>
+                        <tr>
+                            <td colspan="5" class="text-center">No tenes reservas.</td>
+                        </tr>
+                        <% } %>
+                            <% reservas.forEach((reserva)=> { %>
+                                <tr>
+                                    <td>
+                                        <%= reserva.horario && reserva.horario.cancha ? reserva.horario.cancha.nombre
+                                            : '-' %>
+                                    </td>
+                                    <td>
+                                        <%= reserva.horario ? reserva.horario.fecha : '-' %>
+                                    </td>
+                                    <td>
+                                        <%= reserva.horario ? reserva.horario.hora_inicio : '-' %> - <%= reserva.horario
+                                                ? reserva.horario.hora_fin : '-' %>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="badge <%= reserva.estado === 'confirmada' ? 'bg-success' : 'bg-secondary' %>">
+                                            <%= reserva.estado %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <% if (reserva.estado==='confirmada' ) { %>
+                                            <form method="POST" action="/reservas/<%= reserva.id %>/cancelar"
+                                                class="d-inline">
+                                                <button class="btn btn-sm btn-outline-danger">Cancelar</button>
+                                            </form>
+                                            <% } %>
+
+                                                <% if (reserva.estado==='confirmada' && reserva.horario &&
+                                                    reserva.horario.cancha && yaPasoReserva(reserva.horario.fecha,
+                                                    reserva.horario.hora_fin)) { %>
+                                                    <button class="btn btn-sm btn-outline-primary"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#review-<%= reserva.id %>">Reseñar</button>
+                                                    <% } %>
+                                    </td>
+                                </tr>
+                                <% if (reserva.estado==='confirmada' && reserva.horario && reserva.horario.cancha &&
+                                    yaPasoReserva(reserva.horario.fecha, reserva.horario.hora_fin)) { %>
+                                    <tr class="collapse" id="review-<%= reserva.id %>">
+                                        <td colspan="5">
+                                            <form method="POST" action="/resenas" class="row g-2">
+                                                <input type="hidden" name="reserva_id" value="<%= reserva.id %>">
+                                                <input type="hidden" name="cancha_id"
+                                                    value="<%= reserva.horario.cancha.id %>">
+                                                <div class="col-md-2">
+                                                    <select name="calificacion" class="form-select" required>
+                                                        <option value="">Puntaje</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <input type="text" class="form-control" name="comentario"
+                                                        placeholder="Comentario" required>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button class="btn btn-primary w-100">Guardar</button>
+                                                </div>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <% } %>
+                                        <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <%- include('../components/footer') %>
