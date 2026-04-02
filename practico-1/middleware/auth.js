@@ -2,7 +2,7 @@ function ensureAuth(req, res, next) {
     if (!req.session.usuario) {
         return res.redirect('/login');
     }
-    return next();
+    next();
 }
 
 function ensureRole(role) {
@@ -16,7 +16,7 @@ function ensureRole(role) {
                 mensaje: 'No tenes permisos para acceder a esta seccion.'
             });
         }
-        return next();
+        next();
     };
 }
 

@@ -1,7 +1,7 @@
 <%- include('../components/header', { titulo: 'Horarios' }) %>
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="mb-0">Horarios</h2>
-    <a href="/admin/horarios/nuevo" class="btn btn-primary">Agregar horario</a>
+    <h2 class="mb-0">Horarios de atencion</h2>
+    <a href="/admin/horarios/nuevo" class="btn btn-primary">Agregar disponibilidad</a>
 </div>
 
 <form class="row g-2 mb-3" method="GET" action="/admin/horarios">
@@ -26,8 +26,8 @@
         <tr>
             <th>Cancha</th>
             <th>Fecha</th>
-            <th>Inicio</th>
-            <th>Fin</th>
+            <th>Disponible desde</th>
+            <th>Disponible hasta</th>
             <th>Disponible</th>
             <th>Acciones</th>
         </tr>
@@ -42,8 +42,8 @@
                     <tr>
                         <td><%= h.cancha ? h.cancha.nombre : '-' %></td>
                         <td><%= h.fecha %></td>
-                        <td><%= h.hora_inicio %></td>
-                        <td><%= h.hora_fin %></td>
+                        <td><%= h.hora_inicio.slice(0, 5) %></td>
+                        <td><%= h.hora_fin.slice(0, 5) %></td>
                         <td><%= h.disponible ? 'si' : 'no' %></td>
                         <td>
                             <form method="POST" action="/admin/horarios/<%= h.id %>/eliminar" class="d-inline">

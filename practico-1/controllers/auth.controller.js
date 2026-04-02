@@ -9,7 +9,7 @@ module.exports = (db) => {
                 return res.redirect('/dashboard');
             }
 
-            return res.render('auth/register', {
+            res.render('auth/register', {
                 error: null,
                 valores: {}
             });
@@ -59,9 +59,9 @@ module.exports = (db) => {
                     message: 'Cuenta creada correctamente. Ahora podes iniciar sesion.'
                 };
 
-                return res.redirect('/login');
+                res.redirect('/login');
             } catch (error) {
-                return res.status(500).render('auth/register', {
+                res.status(500).render('auth/register', {
                     error: 'No se pudo registrar el usuario.',
                     valores
                 });
@@ -73,7 +73,7 @@ module.exports = (db) => {
                 return res.redirect('/dashboard');
             }
 
-            return res.render('auth/login', {
+            res.render('auth/login', {
                 error: null,
                 valores: {}
             });
@@ -113,9 +113,9 @@ module.exports = (db) => {
                     return res.redirect('/admin');
                 }
 
-                return res.redirect('/canchas');
+                res.redirect('/canchas');
             } catch (error) {
-                return res.status(500).render('auth/login', {
+                res.status(500).render('auth/login', {
                     error: 'No se pudo iniciar sesion.',
                     valores: { email }
                 });
@@ -128,7 +128,7 @@ module.exports = (db) => {
                 type: 'info',
                 message: 'Sesion cerrada.'
             };
-            return res.redirect('/login');
+            res.redirect('/login');
         }
     };
 };

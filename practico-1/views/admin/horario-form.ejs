@@ -1,14 +1,12 @@
-<%- include('../components/header', { titulo: 'Nuevo Horario' }) %>
-<h2 class="mb-3">Agregar horario disponible</h2>
+<%- include('../components/header', { titulo: 'Nueva Disponibilidad' }) %>
+<h2 class="mb-3">Agregar horario de atencion</h2>
 <form method="POST" action="/admin/horarios">
     <div class="mb-3">
         <label class="form-label">Cancha</label>
         <select name="cancha_id" class="form-select" required>
             <option value="">Seleccionar</option>
             <% canchas.forEach((cancha)=> { %>
-                <option value="<%= cancha.id %>">
-                    <%= cancha.nombre %>
-                </option>
+                <option value="<%= cancha.id %>"><%= cancha.nombre %></option>
                 <% }) %>
         </select>
     </div>
@@ -17,11 +15,11 @@
         <input type="date" name="fecha" class="form-control" min="<%= hoy %>" required>
     </div>
     <div class="mb-3">
-        <label class="form-label">Hora inicio</label>
+        <label class="form-label">Disponible desde</label>
         <input type="time" name="hora_inicio" class="form-control" required>
     </div>
     <div class="mb-3">
-        <label class="form-label">Hora fin</label>
+        <label class="form-label">Disponible hasta</label>
         <input type="time" name="hora_fin" class="form-control" required>
     </div>
     <div>

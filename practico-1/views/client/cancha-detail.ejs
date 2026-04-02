@@ -15,12 +15,12 @@
     </div>
 </form>
 
-<h3>Fechas con horarios disponibles</h3>
+<h3>Fechas con disponibilidad</h3>
 <table class="table table-bordered">
     <thead>
         <tr>
             <th>Fecha</th>
-            <th>Horas libres</th>
+            <th>Rangos libres</th>
             <th>Accion</th>
         </tr>
     </thead>
@@ -42,35 +42,50 @@
     </tbody>
 </table>
 
-<h3>Horarios disponibles</h3>
+<h3>Rangos disponibles del dia</h3>
 <table class="table table-bordered">
     <thead>
         <tr>
             <th>Inicio</th>
             <th>Fin</th>
-            <th>Accion</th>
         </tr>
     </thead>
     <tbody>
         <% if (!horarios.length) { %>
             <tr>
-                <td colspan="3" class="text-center">No hay horarios disponibles</td>
+                <td colspan="2" class="text-center">No hay horarios disponibles</td>
             </tr>
             <% } %>
                 <% horarios.forEach((h)=> { %>
                     <tr>
-                        <td><%= h.hora_inicio %></td>
-                        <td><%= h.hora_fin %></td>
-                        <td>
-                            <form action="/reservas" method="POST" class="m-0">
-                                <input type="hidden" name="horario_id" value="<%= h.id %>">
-                                <button class="btn btn-sm btn-primary" type="submit">Reservar</button>
-                            </form>
-                        </td>
+                        <td><%= h.hora_inicio.slice(0, 5) %></td>
+                        <td><%= h.hora_fin.slice(0, 5) %></td>
                     </tr>
                     <% }) %>
     </tbody>
 </table>
+
+<h3>Crear reserva</h3>
+<% if (horarios.length) { %>
+    <form action="/reservas" method="POST" class="row g-2 mb-4">
+        <input type="hidden" name="cancha_id" value="<%= cancha.id %>">
+        <input type="hidden" name="fecha" value="<%= fechaSeleccionada %>">
+        <div class="col-md-3">
+            <label class="form-label">Hora inicio</label>
+            <input type="time" name="hora_inicio" class="form-control" required>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Hora fin</label>
+            <input type="time" name="hora_fin" class="form-control" required>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">&nbsp;</label>
+            <button class="btn btn-primary w-100" type="submit">Reservar</button>
+        </div>
+    </form>
+    <% } else { %>
+        <p>No podes reservar porque ese dia no tiene disponibilidad.</p>
+        <% } %>
 
 <h3>Resenas</h3>
 <table class="table table-bordered">

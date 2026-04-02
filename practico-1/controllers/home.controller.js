@@ -4,24 +4,22 @@ module.exports = (db) => {
     const Horario = db.horario;
     const Resena = db.resena;
     const Usuario = db.usuario;
-    const { Op } = db.Sequelize;
 
     return {
         redirectBySession: (req, res) => {
             if (!req.session.usuario) {
                 return res.redirect('/login');
             }
-            return res.redirect('/dashboard');
+
+            res.redirect('/dashboard');
         },
 
         dashboard: (req, res) => {
-            if (!req.session.usuario) {
-                return res.redirect('/login');
-            }
             if (req.session.usuario.rol === 'admin') {
                 return res.redirect('/admin');
             }
-            return res.redirect('/canchas');
+
+            res.redirect('/canchas');
         },
 
         listCanchas: async (req, res) => {
@@ -32,12 +30,9 @@ module.exports = (db) => {
                     order: [['nombre', 'ASC']]
                 });
 
-                return res.render('client/canchas', {
-                    canchas,
-                    fecha: req.query.fecha || null
-                });
+                res.render('client/canchas', { canchas });
             } catch (error) {
-                return res.status(500).render('error', {
+                res.status(500).render('error', {
                     titulo: 'Error al listar canchas',
                     mensaje: error.message
                 });
@@ -67,31 +62,26 @@ module.exports = (db) => {
                 const hoy = new Date().toISOString().slice(0, 10);
                 const fechaSeleccionada = req.query.fecha || hoy;
 
-                const horarios = await Horario.findAll({
+                const todosLosHorarios = await Horario.findAll({
                     where: {
                         cancha_id: cancha.id,
-                        fecha: fechaSeleccionada,
-                        disponible: true
-                    },
-                    order: [['hora_inicio', 'ASC']]
-                });
-
-                const horariosFuturos = await Horario.findAll({
-                    where: {
-                        cancha_id: cancha.id,
-                        fecha: {
-                            [Op.gte]: hoy
-                        },
                         disponible: true
                     },
                     order: [['fecha', 'ASC'], ['hora_inicio', 'ASC']]
                 });
 
+                const horarios = todosLosHorarios.filter((horario) => horario.fecha === fechaSeleccionada);
+
                 const fechasMap = {};
-                for (const horario of horariosFuturos) {
+                for (const horario of todosLosHorarios) {
+                    if (horario.fecha < hoy) {
+                        continue;
+                    }
+
                     if (!fechasMap[horario.fecha]) {
                         fechasMap[horario.fecha] = 0;
                     }
+
                     fechasMap[horario.fecha] += 1;
                 }
 
@@ -108,7 +98,7 @@ module.exports = (db) => {
                     order: [['createdAt', 'DESC']]
                 });
 
-                return res.render('client/cancha-detail', {
+                res.render('client/cancha-detail', {
                     cancha,
                     fechaSeleccionada,
                     horarios,
@@ -117,7 +107,7 @@ module.exports = (db) => {
                     resenas
                 });
             } catch (error) {
-                return res.status(500).render('error', {
+                res.status(500).render('error', {
                     titulo: 'Error al ver cancha',
                     mensaje: error.message
                 });

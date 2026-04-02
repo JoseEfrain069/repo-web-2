@@ -24,7 +24,7 @@
                         <td><%= r.usuario ? r.usuario.email : '-' %></td>
                         <td><%= r.horario && r.horario.cancha ? r.horario.cancha.nombre : '-' %></td>
                         <td><%= r.horario ? r.horario.fecha : '-' %></td>
-                        <td><%= r.horario ? r.horario.hora_inicio : '-' %> - <%= r.horario ? r.horario.hora_fin : '-' %></td>
+                        <td><%= r.horario ? r.horario.hora_inicio.slice(0, 5) : '-' %> - <%= r.horario ? r.horario.hora_fin.slice(0, 5) : '-' %></td>
                         <td><%= r.estado %></td>
                         <td>
                             <form method="POST" action="/admin/reservas/<%= r.id %>/estado" class="row g-1">

@@ -28,12 +28,12 @@ db.reserva.belongsTo(db.usuario, { foreignKey: 'usuario_id', as: 'usuario' });
 // Horario -> reserva (un horario solo puede tener una reserva activa)
 db.horario.hasOne(db.reserva, { foreignKey: 'horario_id', as: 'reserva' });
 db.reserva.belongsTo(db.horario, { foreignKey: 'horario_id', as: 'horario' });
+    
 
-// Usuario -> reseñas
 db.usuario.hasMany(db.resena, { foreignKey: 'usuario_id', as: 'resenas' });
 db.resena.belongsTo(db.usuario, { foreignKey: 'usuario_id', as: 'usuario' });
 
-// Cancha -> reseñas
+ 
 db.cancha.hasMany(db.resena, { foreignKey: 'cancha_id', as: 'resenas' });
 db.resena.belongsTo(db.cancha, { foreignKey: 'cancha_id', as: 'cancha' });
 

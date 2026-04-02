@@ -8,12 +8,10 @@ const { sha1Encode } = require('./utils/text.utils');
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: false }));
-
 app.use(session({
     secret: 'reserva-canchas-secret',
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 * 4 }
 }));
 
 app.use((req, res, next) => {
@@ -25,9 +23,8 @@ app.use((req, res, next) => {
 
 require('./controllers')(app, db);
 
-// Para habilitar la BD
+
 db.sequelize.sync({
-    // force: true // drop tables and recreate
 }).then(async () => {
     console.log('db resync');
 

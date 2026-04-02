@@ -20,7 +20,7 @@
                     <tr>
                         <td><%= reserva.horario && reserva.horario.cancha ? reserva.horario.cancha.nombre : '-' %></td>
                         <td><%= reserva.horario ? reserva.horario.fecha : '-' %></td>
-                        <td><%= reserva.horario ? reserva.horario.hora_inicio : '-' %> - <%= reserva.horario ? reserva.horario.hora_fin : '-' %></td>
+                        <td><%= reserva.horario ? reserva.horario.hora_inicio.slice(0, 5) : '-' %> - <%= reserva.horario ? reserva.horario.hora_fin.slice(0, 5) : '-' %></td>
                         <td><%= reserva.estado %></td>
                         <td>
                             <% if (reserva.estado==='confirmada' ) { %>

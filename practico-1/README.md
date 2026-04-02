@@ -17,7 +17,7 @@ Aplicacion web monolitica hecha con Node.js, Express, EJS, Sequelize y SQLite, m
 
 1. Abrir una terminal en la carpeta `practico-1`
 2. Ejecutar `npm install`
-3. Ejecutar `npm run dev`
+3. Ejecutar `npm run start`
 4. Abrir `http://localhost:3000`
 
 ## Usuario admin inicial
