@@ -15,33 +15,6 @@
     </div>
 </form>
 
-<h3>Fechas con disponibilidad</h3>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Fecha</th>
-            <th>Rangos libres</th>
-            <th>Accion</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% if (!fechasDisponibles.length) { %>
-            <tr>
-                <td colspan="3" class="text-center">No hay fechas disponibles</td>
-            </tr>
-            <% } %>
-                <% fechasDisponibles.forEach((item)=> { %>
-                    <tr>
-                        <td><%= item.fecha %></td>
-                        <td><%= item.cantidad %></td>
-                        <td>
-                            <a href="/canchas/<%= cancha.id %>?fecha=<%= item.fecha %>" class="btn btn-sm btn-primary">Ver</a>
-                        </td>
-                    </tr>
-                    <% }) %>
-    </tbody>
-</table>
-
 <h3>Rangos disponibles del dia</h3>
 <table class="table table-bordered">
     <thead>

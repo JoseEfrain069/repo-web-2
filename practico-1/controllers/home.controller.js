@@ -72,26 +72,6 @@ module.exports = (db) => {
 
                 const horarios = todosLosHorarios.filter((horario) => horario.fecha === fechaSeleccionada);
 
-                const fechasMap = {};
-                for (const horario of todosLosHorarios) {
-                    if (horario.fecha < hoy) {
-                        continue;
-                    }
-
-                    if (!fechasMap[horario.fecha]) {
-                        fechasMap[horario.fecha] = 0;
-                    }
-
-                    fechasMap[horario.fecha] += 1;
-                }
-
-                const fechasDisponibles = Object.keys(fechasMap)
-                    .slice(0, 7)
-                    .map((fecha) => ({
-                        fecha,
-                        cantidad: fechasMap[fecha]
-                    }));
-
                 const resenas = await Resena.findAll({
                     where: { cancha_id: cancha.id },
                     include: [{ model: Usuario, as: 'usuario', attributes: ['nombre'] }],
@@ -102,7 +82,6 @@ module.exports = (db) => {
                     cancha,
                     fechaSeleccionada,
                     horarios,
-                    fechasDisponibles,
                     hoy,
                     resenas
                 });
