@@ -1,9 +1,10 @@
+const path = require('path');
 const { Sequelize } = require('sequelize');
 
 // Config SQLite
 const sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: 'database.sqlite'
+    storage: path.join(__dirname, '..', 'database.sqlite')
 });
 
 sequelize.authenticate()

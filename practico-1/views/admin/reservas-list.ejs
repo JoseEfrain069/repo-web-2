@@ -1,63 +1,46 @@
 <%- include('../components/header', { titulo: 'Reservas' }) %>
-    <h2 class="mb-3">Todas las Reservas</h2>
-    <div class="card">
-        <div class="card-body p-0">
-            <table class="table table-striped m-0">
-                <thead>
+<h2 class="mb-3">Todas las Reservas</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Cliente</th>
+            <th>Email</th>
+            <th>Cancha</th>
+            <th>Fecha</th>
+            <th>Horario</th>
+            <th>Estado</th>
+            <th>Actualizar</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (!reservas.length) { %>
+            <tr>
+                <td colspan="7" class="text-center">Sin reservas</td>
+            </tr>
+            <% } %>
+                <% reservas.forEach((r)=> { %>
                     <tr>
-                        <th>Cliente</th>
-                        <th>Email</th>
-                        <th>Cancha</th>
-                        <th>Fecha</th>
-                        <th>Horario</th>
-                        <th>Estado</th>
-                        <th>Actualizar</th>
+                        <td><%= r.usuario ? r.usuario.nombre : '-' %></td>
+                        <td><%= r.usuario ? r.usuario.email : '-' %></td>
+                        <td><%= r.horario && r.horario.cancha ? r.horario.cancha.nombre : '-' %></td>
+                        <td><%= r.horario ? r.horario.fecha : '-' %></td>
+                        <td><%= r.horario ? r.horario.hora_inicio : '-' %> - <%= r.horario ? r.horario.hora_fin : '-' %></td>
+                        <td><%= r.estado %></td>
+                        <td>
+                            <form method="POST" action="/admin/reservas/<%= r.id %>/estado" class="row g-1">
+                                <div class="col">
+                                    <select name="estado" class="form-select form-select-sm">
+                                        <option value="confirmada" <%=r.estado==='confirmada' ? 'selected' : '' %>>confirmada</option>
+                                        <option value="cancelada" <%=r.estado==='cancelada' ? 'selected' : '' %>>cancelada</option>
+                                    </select>
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-sm btn-primary" type="submit">Guardar</button>
+                                </div>
+                            </form>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    <% if (!reservas.length) { %>
-                        <tr>
-                            <td colspan="7" class="text-center">Sin reservas.</td>
-                        </tr>
-                        <% } %>
-                            <% reservas.forEach((r)=> { %>
-                                <tr>
-                                    <td>
-                                        <%= r.usuario ? r.usuario.nombre : '-' %>
-                                    </td>
-                                    <td>
-                                        <%= r.usuario ? r.usuario.email : '-' %>
-                                    </td>
-                                    <td>
-                                        <%= r.horario && r.horario.cancha ? r.horario.cancha.nombre : '-' %>
-                                    </td>
-                                    <td>
-                                        <%= r.horario ? r.horario.fecha : '-' %>
-                                    </td>
-                                    <td>
-                                        <%= r.horario ? r.horario.hora_inicio : '-' %> - <%= r.horario ?
-                                                r.horario.hora_fin : '-' %>
-                                    </td>
-                                    <td><span
-                                            class="badge <%= r.estado === 'confirmada' ? 'bg-success' : 'bg-secondary' %>">
-                                            <%= r.estado %>
-                                        </span></td>
-                                    <td>
-                                        <form method="POST" action="/admin/reservas/<%= r.id %>/estado"
-                                            class="d-flex gap-2">
-                                            <select name="estado" class="form-select form-select-sm">
-                                                <option value="confirmada" <%=r.estado==='confirmada' ? 'selected' : ''
-                                                    %>>confirmada</option>
-                                                <option value="cancelada" <%=r.estado==='cancelada' ? 'selected' : '' %>
-                                                    >cancelada</option>
-                                            </select>
-                                            <button class="btn btn-sm btn-outline-primary">Guardar</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                <% }) %>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <%- include('../components/footer') %>
+                    <% }) %>
+    </tbody>
+</table>
+<%- include('../components/footer') %>

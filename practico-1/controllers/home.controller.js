@@ -1,12 +1,10 @@
-const { Op } = require('sequelize');
-
 module.exports = (db) => {
     const Cancha = db.cancha;
     const TipoCancha = db.tipoCancha;
     const Horario = db.horario;
-    const Reserva = db.reserva;
     const Resena = db.resena;
     const Usuario = db.usuario;
+    const { Op } = db.Sequelize;
 
     return {
         redirectBySession: (req, res) => {
@@ -59,7 +57,15 @@ module.exports = (db) => {
                     });
                 }
 
-                const fechaSeleccionada = req.query.fecha || new Date().toISOString().slice(0, 10);
+                if (cancha.estado !== 'activa') {
+                    return res.status(404).render('error', {
+                        titulo: 'Cancha no disponible',
+                        mensaje: 'La cancha solicitada no esta activa.'
+                    });
+                }
+
+                const hoy = new Date().toISOString().slice(0, 10);
+                const fechaSeleccionada = req.query.fecha || hoy;
 
                 const horarios = await Horario.findAll({
                     where: {
@@ -67,9 +73,34 @@ module.exports = (db) => {
                         fecha: fechaSeleccionada,
                         disponible: true
                     },
-                    include: [{ model: Reserva, as: 'reserva', required: false, where: { estado: { [Op.ne]: 'confirmada' } } }],
                     order: [['hora_inicio', 'ASC']]
                 });
+
+                const horariosFuturos = await Horario.findAll({
+                    where: {
+                        cancha_id: cancha.id,
+                        fecha: {
+                            [Op.gte]: hoy
+                        },
+                        disponible: true
+                    },
+                    order: [['fecha', 'ASC'], ['hora_inicio', 'ASC']]
+                });
+
+                const fechasMap = {};
+                for (const horario of horariosFuturos) {
+                    if (!fechasMap[horario.fecha]) {
+                        fechasMap[horario.fecha] = 0;
+                    }
+                    fechasMap[horario.fecha] += 1;
+                }
+
+                const fechasDisponibles = Object.keys(fechasMap)
+                    .slice(0, 7)
+                    .map((fecha) => ({
+                        fecha,
+                        cantidad: fechasMap[fecha]
+                    }));
 
                 const resenas = await Resena.findAll({
                     where: { cancha_id: cancha.id },
@@ -81,6 +112,8 @@ module.exports = (db) => {
                     cancha,
                     fechaSeleccionada,
                     horarios,
+                    fechasDisponibles,
+                    hoy,
                     resenas
                 });
             } catch (error) {

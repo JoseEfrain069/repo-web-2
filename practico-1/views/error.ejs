@@ -1,11 +1,5 @@
 <%- include('components/header', { titulo: titulo }) %>
-    <div class="alert alert-danger">
-        <h4>
-            <%= titulo %>
-        </h4>
-        <p class="mb-0">
-            <%= mensaje %>
-        </p>
-    </div>
-    <a href="/dashboard" class="btn btn-primary">Volver</a>
-    <%- include('components/footer') %>
+<h2><%= titulo %></h2>
+<p><%= mensaje %></p>
+<a href="/dashboard" class="btn btn-primary">Volver</a>
+<%- include('components/footer') %>

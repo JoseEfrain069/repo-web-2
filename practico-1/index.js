@@ -1,13 +1,13 @@
-const express = require('express')
-const app = express()
-const port = 3000
+const express = require('express');
+const app = express();
+const port = 3000;
+const bodyParser = require('body-parser');
 const session = require('express-session');
-const bcrypt = require('bcryptjs');
 const db = require('./models');
+const { sha1Encode } = require('./utils/text.utils');
 
 app.set('view engine', 'ejs');
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(session({
     secret: 'reserva-canchas-secret',
@@ -18,6 +18,8 @@ app.use(session({
 
 app.use((req, res, next) => {
     res.locals.usuario = req.session.usuario || null;
+    res.locals.flash = req.session.flash || null;
+    delete req.session.flash;
     next();
 });
 
@@ -31,16 +33,20 @@ db.sequelize.sync({
 
     const adminEmail = 'admin@admin.com';
     const adminExists = await db.usuario.findOne({ where: { email: adminEmail } });
+    const adminPassword = sha1Encode('admin1234');
 
     if (!adminExists) {
-        const hash = await bcrypt.hash('admin1234', 10);
         await db.usuario.create({
             nombre: 'Administrador',
             email: adminEmail,
-            contrasena: hash,
+            contrasena: adminPassword,
             rol: 'admin'
         });
         console.log('Usuario admin inicial creado: admin@admin.com / admin1234');
+    } else if (adminExists.contrasena !== adminPassword) {
+        adminExists.contrasena = adminPassword;
+        adminExists.rol = 'admin';
+        await adminExists.save();
     }
 });
 
