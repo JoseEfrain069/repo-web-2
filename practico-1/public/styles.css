@@ -1,0 +1,12 @@
+body {
+    background-color: #f5f7fb;
+}
+
+.card {
+    border: 0;
+}
+
+.table td,
+.table th {
+    vertical-align: middle;
+}
