@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -18,5 +19,6 @@ app.use((err, req, res, next) => {
 
 sequelize.sync().then(() => {
     console.log('Base de datos sincronizada');
-    app.listen(3000, () => console.log('Backend corriendo en http://localhost:3000'));
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => console.log(`Backend corriendo en http://localhost:${PORT}`));
 });

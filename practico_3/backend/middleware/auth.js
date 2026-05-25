@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const SECRET = 'onlyflans_secret';
+const SECRET = process.env.JWT_SECRET;
 
 function authMiddleware(req, res, next) {
     const token = req.headers.authorization?.split(' ')[1];
